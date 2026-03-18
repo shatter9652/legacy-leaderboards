@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.urls import URLPattern, URLResolver, get_resolver
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,6 +9,64 @@ from .serializers import (
     LeaderboardEntrySerializer,
     RegisterScoreSerializer,
 )
+
+
+class ApiRootView(APIView):
+    def _iter_urlpatterns(self, patterns, prefix=""):
+        for pattern in patterns:
+            if isinstance(pattern, URLResolver):
+                nested_prefix = f"{prefix}{pattern.pattern}"
+                yield from self._iter_urlpatterns(pattern.url_patterns, nested_prefix)
+            elif isinstance(pattern, URLPattern):
+                route = f"{prefix}{pattern.pattern}".lstrip("/")
+                yield route, pattern.callback
+
+    def _extract_operations(self, callback):
+        view_class = getattr(callback, "view_class", None)
+        if view_class is None:
+            return []
+
+        ops = []
+        for method in getattr(view_class, "http_method_names", []):
+            if method in {"head", "options", "trace"}:
+                continue
+            if hasattr(view_class, method):
+                ops.append(method.upper())
+        return ops
+
+    def get(self, request):
+        base_url = request.build_absolute_uri("/").rstrip("/")
+        endpoints = []
+
+        for route, callback in self._iter_urlpatterns(get_resolver().url_patterns):
+            normalized = route.strip("^").strip("$")
+            if not normalized.startswith("api/"):
+                continue
+
+            if normalized == "api/":
+                continue
+
+            operations = self._extract_operations(callback)
+            if not operations:
+                continue
+
+            endpoints.append(
+                {
+                    "path": f"{base_url}/{normalized}",
+                    "operations": operations,
+                }
+            )
+
+        endpoints.sort(key=lambda item: item["path"])
+
+        return Response(
+            {
+                "name": "Legacy Leaderboards API",
+                "path": f"{base_url}/api/",
+                "operations": ["GET"],
+                "endpoints": endpoints,
+            }
+        )
 
 DIFFICULTY_MAP = {
     "peaceful": DifficultyType.PEACEFUL,

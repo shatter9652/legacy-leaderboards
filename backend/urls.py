@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    ApiRootView,
     WriteStatsView,
     TopRankView,
     FriendsLeaderboardView,
@@ -8,9 +9,9 @@ from .views import (
 )
 
 urlpatterns = [
+    path("api/", ApiRootView.as_view()),
     path("api/leaderboard/write/", WriteStatsView.as_view()),
     path("api/leaderboard/top/", TopRankView.as_view()),
     path("api/leaderboard/friends/", FriendsLeaderboardView.as_view()),
     path("api/leaderboard/my-score/", MyScoreView.as_view()),
-    path("api/leaderboard/", LeaderboardView.as_view()),
 ]
