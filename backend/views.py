@@ -146,6 +146,18 @@ class LogoutView(View):
         return redirect("login")
 
 
+class MyAchievementsRedirectView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("login")
+
+        player = Player.objects.filter(user=request.user).only("uid").first()
+        if player is None:
+            return redirect("create-account")
+
+        return redirect(f"/ui/achievements?uid={player.uid}")
+
+
 class ApiRootView(APIView):
     def _iter_urlpatterns(self, patterns, prefix=""):
         for pattern in patterns:

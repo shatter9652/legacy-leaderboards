@@ -289,7 +289,7 @@
     <nav class="navbar">
       <div class="nav-left">
         <a class="nav-btn" href="{% url 'home' %}">Home</a>
-        <a class="nav-btn" href="{% url 'achievements-ui' %}?uid={{ uid|urlencode }}">My Achievements</a>
+        <a class="nav-btn" href="{% url 'my-achievements' %}">My Achievements</a>
         {% if request.user.is_authenticated %}
           <form class="nav-form" method="post" action="{% url 'logout' %}">
             {% csrf_token %}
