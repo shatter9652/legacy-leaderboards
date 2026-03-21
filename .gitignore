@@ -3,3 +3,4 @@ migrations
 *.sqlite3
 *.gameconfig
 *.env
+*.log
