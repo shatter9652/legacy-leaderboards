@@ -345,7 +345,7 @@
     </main>
   </div>
 
-  <script>
+  <script nonce="{{ request.csp_nonce }}">
     const cards = Array.from(document.querySelectorAll('.card'));
     const nameEl = document.getElementById('achievement-name');
     const descriptionEl = document.getElementById('achievement-description');

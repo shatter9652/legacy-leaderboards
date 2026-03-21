@@ -185,7 +185,7 @@ X_FRAME_OPTIONS = "DENY"
 
 CONTENT_SECURITY_POLICY = {
     "default-src": "'self'",
-    "script-src": "'self'",
+    "script-src": "'self' {nonce}",
     "style-src": "'self' 'unsafe-inline'",
     "img-src": "'self' data:",
     "font-src": "'self' data:",

@@ -1,5 +1,6 @@
 import json
 import logging
+import secrets
 
 
 logger = logging.getLogger("backend.request")
@@ -76,13 +77,14 @@ class SecurityHeadersMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        request.csp_nonce = secrets.token_urlsafe(16)
         response = self.get_response(request)
-        csp = self._build_csp_value()
+        csp = self._build_csp_value(request)
         if csp:
             response["Content-Security-Policy"] = csp
         return response
 
-    def _build_csp_value(self):
+    def _build_csp_value(self, request):
         from django.conf import settings
 
         policy = getattr(settings, "CONTENT_SECURITY_POLICY", None)
@@ -95,6 +97,8 @@ class SecurityHeadersMiddleware:
                 rendered_value = " ".join(str(item) for item in value if item)
             else:
                 rendered_value = str(value).strip()
+
+            rendered_value = rendered_value.replace("{nonce}", f"'nonce-{request.csp_nonce}'")
 
             if not key or not rendered_value:
                 continue
