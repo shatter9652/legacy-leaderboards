@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.db.models import F, Sum
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import URLPattern, URLResolver, get_resolver
 from django.views import View
@@ -30,6 +31,7 @@ class CreateAccountView(View):
     template_name = "backend/auth_form.html"
 
     def get(self, request):
+        uid = request.GET.get("uid", "").strip()
         return render(
             request,
             self.template_name,
@@ -39,7 +41,7 @@ class CreateAccountView(View):
                 "subheading": "Start tracking your progress",
                 "button_text": "Create Account",
                 "mode": "register",
-                "uid": "",
+                "uid": uid,
             },
         )
 
@@ -236,6 +238,10 @@ class AchievementsUIView(APIView):
         uid = request.query_params.get("uid")
         if not uid:
             return Response({"error": "Missing required query param: uid"}, status=400)
+
+        if not request.user.is_authenticated:
+            create_account_url = f"{reverse('create-account')}?uid={uid}"
+            return redirect(create_account_url)
 
         try:
             player = Player.objects.get(uid=uid)

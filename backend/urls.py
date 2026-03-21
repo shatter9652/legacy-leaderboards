@@ -24,7 +24,7 @@ urlpatterns = [
     path("create-account/", CreateAccountView.as_view(), name="create-account"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
-#    path("ui/achievements", AchievementsUIView.as_view(), name="achievements-ui"),
+    path("ui/achievements", AchievementsUIView.as_view(), name="achievements-ui"),
     path("api/", ApiRootView.as_view()),
     path("api/achievement/list", AchievementListView.as_view()),
     path("api/achievement/add", AddAchievementToPlayerView.as_view()),

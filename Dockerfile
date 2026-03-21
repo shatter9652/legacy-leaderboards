@@ -13,6 +13,9 @@ ENV SECRET_KEY=$SECRET_KEY
 ARG DEBUG
 ENV DEBUG=$DEBUG
 
+ARG ALLOWED_HOSTS
+ENV ALLOWED_HOSTS=$ALLOWED_HOSTS
+
 RUN pip install uv
 
 RUN uv pip install --system --no-cache-dir -r requirements.txt
