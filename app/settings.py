@@ -145,7 +145,7 @@ X_FRAME_OPTIONS = "DENY"
 
 CONTENT_SECURITY_POLICY = {
     "default-src": "'self'",
-    "script-src": "'self' {nonce}",
+    "script-src": "'self' {nonce} https://pa.jakefarrell.ie",
     "style-src": "'self' 'unsafe-inline'",
     "img-src": "'self' data:",
     "font-src": "'self' data:",
