@@ -149,7 +149,7 @@ CONTENT_SECURITY_POLICY = {
     "style-src": "'self' 'unsafe-inline'",
     "img-src": "'self' data:",
     "font-src": "'self' data:",
-    "connect-src": "'self'",
+    "connect-src": "'self' https://pa.jakefarrell.ie",
     "frame-ancestors": "'none'",
     "base-uri": "'self'",
     "form-action": "'self'",
