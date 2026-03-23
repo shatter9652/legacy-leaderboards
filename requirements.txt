@@ -3,3 +3,5 @@ djangorestframework
 python-dotenv
 whitenoise
 gunicorn
+psycopg[binary]
+dj-database-url
