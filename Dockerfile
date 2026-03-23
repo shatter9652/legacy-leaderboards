@@ -22,8 +22,6 @@ RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 RUN python manage.py collectstatic -v 3 --noinput
 
-RUN python manage.py migrate --noinput
-
 EXPOSE 8000
 
 CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn app.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
